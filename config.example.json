@@ -1,0 +1,8 @@
+{
+  "latRange": [35.0, 35.18],
+  "longRange": [-85.4, -85.2],
+  "radiusInMeters": 2000,
+  "apiKey": "xxxxxxxxxxxxxxx",
+  "mapsType": "restaurant",
+  "filterChainRestaurants": true
+}

@@ -1,0 +1,53 @@
+const chains = [
+  `Taco Bell`,
+  `Bojangles`,
+  `McDonald`,
+  `McDonald's`,
+  `Waffle House`,
+  `Burger King`,
+  `Wendy`,
+  `Panera`,
+  `KFC`,
+  `Kentuck Fried`,
+  `Chick-fil-A`,
+  `MAPCO`,
+  `Circle K`,
+  `Olive Garden`,
+  `Outback`,
+  `Sonic`,
+  `Church's Chicken`,
+  `Little Caesars`,
+  `Arby's`,
+  `Jack-in-the-box`,
+  `Chuck E. Cheese`,
+  `McDonald's`,
+  `IHOP`,
+  `Hooters`,
+  `Five Guys`,
+  `Krystal`,
+  `Popeyes`,
+  `Hardee's`,
+  `Dunkin'`,
+  `Pizza Hut`,
+  `Dominos`,
+  `Jersey Mike's Subs`,
+  `Subway`,
+  `Jimmy John's`,
+  `Which Wich`,
+  `Cracker Barrel`,
+  `Krispy Kreme`,
+  `Chili's`,
+  `Ruby Tuesday`,
+  `Buffalo Wild Wings`,
+  `Domino's`,
+  `Papa John`,
+  `Long John Silver's`,
+  `Shell`,
+];
+const chainsRegex = new RegExp(chains.join("|"), "i");
+
+function isChain(placeName) {
+  return chainsRegex.test(placeName);
+}
+
+module.exports = isChain;

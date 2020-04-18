@@ -1,0 +1,26 @@
+{
+  "name": "argo",
+  "version": "1.0.0",
+  "description": "get places based on a lat / long grid from the Google Maps API",
+  "main": "src/index.js",
+  "author": "Samuel Thomas",
+  "license": "MIT",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@googlemaps/google-maps-services-js": "^2.5.5",
+    "axios": "^0.19.2",
+    "json2csv": "^5.0.0",
+    "progress": "^2.0.3"
+  },
+  "devDependencies": {
+    "prettier": "^2.0.4",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.1",
+    "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1"
+  }
+}
