@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^2.5.5",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "json2csv": "^5.0.0",
     "progress": "^2.0.3"
   },
