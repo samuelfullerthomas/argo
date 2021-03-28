@@ -1,4 +1,4 @@
-const chains = [
+const chainsArray = [
   `Taco Bell`,
   `Bojangles`,
   `McDonald`,
@@ -44,10 +44,10 @@ const chains = [
   `Long John Silver's`,
   `Shell`,
 ];
-const chainsRegex = new RegExp(chains.join("|"), "i");
+const chainsRegex = new RegExp(chainsArray.join("|"), "i");
 
-function isChain(placeName) {
+function chains(placeName) {
   return chainsRegex.test(placeName);
 }
 
-module.exports = isChain;
+module.exports = chains;

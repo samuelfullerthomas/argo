@@ -1,26 +1,28 @@
+# Note: As of 2021, there is no longer a free tier for using the Google Nearby Places API, so this method cannot be used for free anymore.
+
 # argo
 
 ![argo](https://upload.wikimedia.org/wikipedia/en/f/f4/Argo_submersible.jpg)
 
-get lots more places from the Google Maps places API
+this project can help you get lots more places from the Google Maps places API
 
-## setup
+## getting started
 
 install project dependencies with:
 
 `npm install`
 
-You'll also need a Google Maps API key. [Instructions to get one can be found here.](https://developers.google.com/maps/documentation/javascript/get-api-key).
+You'll also need a Google Maps API key. [Instructions to get one can be found here](https://developers.google.com/maps/documentation/javascript/get-api-key).
 
-## running the script
+### running the script
 
-this script is written to run for resturaunts, but could run for any place types that Google lets you search for.
+this script is written to run for restaurants, but could run for any place types that Google lets you search for.
 
 Create a `config.json` in the root of this folder, copied from the config.example.json (also in the project root).
 
-Provide the Google Maps API key, [the place type](https://developers.google.com/places/supported_types), the radius you want to search in (the default from the example is a good radius), and the latitude and longitude of the grid you want to get restauraunts for.
+Provide the Google Maps API key, [the place type](https://developers.google.com/places/supported_types), the radius you want to search in (the default from the example is a good radius), and the latitude and longitude of the grid you want to get restaurants for.
 
-The lat / long of the grid will be in the format of `[35.0, 35.18]`, where the lower number comes first. Negatives apply for southern hemisphere latitue and for western longitude (the equator and the prime merdian being zero, respectively).
+The lat / long of the grid will be in the format of `[35.0, 35.18]`, where the lower number comes first. Negatives apply for southern hemisphere latitude and for western longitude (the equator and the prime meridian being zero, respectively).
 
 The example coordinates are for a square that roughly covers Chattanooga, TN.
 
