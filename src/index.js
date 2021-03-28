@@ -5,10 +5,15 @@ const { Parser } = require("json2csv");
 
 const config = require("../config.json");
 const { getGrid, sleep } = require("./helpers");
-const munge = require("./mungeAndSort");
+const processPlaces = require("./processPlaces");
 const client = new Client({});
 
-async function getNearby(radiusInMeters, places, latLongPoint, pagetoken) {
+async function getNearby(
+  searchRadiusInMeters,
+  places,
+  latLongPoint,
+  pagetoken
+) {
   if (pagetoken) {
     await sleep(2000);
   }
@@ -16,8 +21,8 @@ async function getNearby(radiusInMeters, places, latLongPoint, pagetoken) {
     .placesNearby({
       params: {
         key: config.apiKey,
-        type: config.mapsType,
-        radius: radiusInMeters,
+        type: config.placeType,
+        radius: searchRadiusInMeters,
         location: latLongPoint,
         pagetoken,
       },
@@ -25,10 +30,10 @@ async function getNearby(radiusInMeters, places, latLongPoint, pagetoken) {
     .catch((e) => {
       console.log(e);
     });
-
+  console.log(response);
   if (response.data.next_page_token) {
     return getNearby(
-      radiusInMeters,
+      searchRadiusInMeters,
       places.concat(response.data.results),
       latLongPoint,
       response.data.next_page_token
@@ -38,26 +43,36 @@ async function getNearby(radiusInMeters, places, latLongPoint, pagetoken) {
   }
 }
 
-async function getAllPlaces(latLongPoint, radiusInMeters, grid) {
-  const placesFromGoogle = await getNearby(radiusInMeters, [], latLongPoint);
+async function getAllPlaces(latLongPoint, searchRadiusInMeters, grid) {
+  console.log("hello2");
+  const placesFromGoogle = await getNearby(
+    searchRadiusInMeters,
+    [],
+    latLongPoint
+  );
   if (placesFromGoogle.length === 60) {
     const subGrib = getGrid(
       [latLongPoint[0] - grid.latStep, latLongPoint[0] + grid.latStep],
       [latLongPoint[1] - grid.longStep, latLongPoint[1] + grid.longStep],
-      radiusInMeters / 4
+      searchRadiusInMeters / 4
     );
-    const morePlaces = await traverse(subGrib, radiusInMeters / 4);
+    const morePlaces = await traverse(subGrib, searchRadiusInMeters / 4);
     return morePlaces;
   }
   return placesFromGoogle;
 }
 
-async function traverse(grid, radiusInMeters, bar) {
+async function traverse(grid, searchRadiusInMeters, bar) {
   let places = [];
+  console.log("hello");
   for (let i = 0; i < grid.steps.length; i++) {
     if (bar) bar.tick();
-    const restos = await getAllPlaces(grid.steps[i], radiusInMeters, grid);
-    places = places.concat(restos);
+    const gridSectionPlaces = await getAllPlaces(
+      grid.steps[i],
+      searchRadiusInMeters,
+      grid
+    );
+    places = places.concat(gridSectionPlaces);
   }
   return places;
 }
@@ -66,23 +81,23 @@ async function run() {
   const grid = getGrid(
     config.latRange,
     config.longRange,
-    config.radiusInMeters
+    config.searchRadiusInMeters
   );
 
   console.log(`Starting transversal of grid...`);
   const bar = new ProgressBar("[:bar] :percent :etas", {
     total: grid.steps.length,
   });
-  const places = await traverse(grid, config.radiusInMeters, bar);
+  const places = await traverse(grid, config.searchRadiusInMeters, bar);
 
-  console.log(`Grid transversal compelete...`);
+  console.log(`Grid transversal complete...`);
 
   const placeIds = places
     .map((place) => place.place_id)
     .filter((rs, index, arr) => arr.indexOf(rs) === index);
 
   console.log(
-    `discovered ${places.length} ${config.mapsType}s, of which ${placeIds.length} are unique`
+    `discovered ${places.length} ${config.placeType}s, of which ${placeIds.length} are unique`
   );
 
   const placesResponses = await Promise.all(
@@ -100,7 +115,7 @@ async function run() {
     .map((response) => response.data.result)
     .flat();
 
-  const mungedAndSortedPlaces = munge(placesWithDetails);
+  const processedPlaces = processPlaces(placesWithDetails);
 
   if (!existsSync("out")) {
     mkdirSync("out");
@@ -112,11 +127,11 @@ async function run() {
   );
   writeFileSync(
     "out/sortedPlaces.json",
-    JSON.stringify({ places: mungedAndSortedPlaces }, null, 2)
+    JSON.stringify({ places: processedPlaces }, null, 2)
   );
   const parser = new Parser();
 
-  writeFileSync("out/sortedPlaces.csv", parser.parse(mungedAndSortedPlaces));
+  writeFileSync("out/sortedPlaces.csv", parser.parse(processedPlaces));
 
   console.log("written files to out folder, and you are all set");
 }

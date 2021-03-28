@@ -6,21 +6,22 @@
   "author": "Samuel Thomas",
   "license": "MIT",
   "scripts": {
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "lint": "eslint . --ext .js"
   },
   "dependencies": {
-    "@googlemaps/google-maps-services-js": "^2.5.5",
+    "@googlemaps/google-maps-services-js": "^3.1.16",
     "axios": "^0.21.1",
-    "json2csv": "^5.0.0",
+    "json2csv": "^5.0.6",
     "progress": "^2.0.3"
   },
   "devDependencies": {
-    "prettier": "^2.0.4",
-    "eslint": "^6.8.0",
-    "eslint-config-prettier": "^6.10.1",
-    "eslint-plugin-prettier": "^3.1.3",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint": "^7.23.0",
+    "eslint-config-prettier": "^8.1.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.2.1"
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-promise": "^4.3.1",
+    "prettier": "^2.2.1"
   }
 }
