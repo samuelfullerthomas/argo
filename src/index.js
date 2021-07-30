@@ -30,7 +30,6 @@ async function getNearby(
     .catch((e) => {
       console.log(e);
     });
-  console.log(response);
   if (response.data.next_page_token) {
     return getNearby(
       searchRadiusInMeters,
@@ -44,7 +43,7 @@ async function getNearby(
 }
 
 async function getAllPlaces(latLongPoint, searchRadiusInMeters, grid) {
-  console.log("hello2");
+  console.log("getting places from: ", latLongPoint, " ", searchRadiusInMeters);
   const placesFromGoogle = await getNearby(
     searchRadiusInMeters,
     [],
@@ -64,7 +63,7 @@ async function getAllPlaces(latLongPoint, searchRadiusInMeters, grid) {
 
 async function traverse(grid, searchRadiusInMeters, bar) {
   let places = [];
-  console.log("hello");
+  console.log("grid steps: ", grid.steps.length);
   for (let i = 0; i < grid.steps.length; i++) {
     if (bar) bar.tick();
     const gridSectionPlaces = await getAllPlaces(
@@ -90,30 +89,22 @@ async function run() {
   });
   const places = await traverse(grid, config.searchRadiusInMeters, bar);
 
+  const { placesWithDetails } = places.reduce((res, place) => {
+    if (!res.placeIds.includes(place.place_id)) {
+      return {
+        placeIds: res.placeIds.concat(place.place_id),
+        placesWithDetails: res.placesWithDetails.concat(place),
+      };
+    }
+
+    return res;
+  }, { placeIds: [], placesWithDetails: [] });
+
   console.log(`Grid transversal complete...`);
 
-  const placeIds = places
-    .map((place) => place.place_id)
-    .filter((rs, index, arr) => arr.indexOf(rs) === index);
-
   console.log(
-    `discovered ${places.length} ${config.placeType}s, of which ${placeIds.length} are unique`
+    `discovered ${places.length} ${config.placeType}s, of which ${placesWithDetails.length} are unique`
   );
-
-  const placesResponses = await Promise.all(
-    placeIds.map((placeId) =>
-      client.placeDetails({
-        params: {
-          key: config.apiKey,
-          place_id: placeId,
-        },
-      })
-    )
-  );
-
-  const placesWithDetails = placesResponses
-    .map((response) => response.data.result)
-    .flat();
 
   const processedPlaces = processPlaces(placesWithDetails);
 
