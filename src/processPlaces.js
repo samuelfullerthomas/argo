@@ -8,12 +8,15 @@ function processPlaces(placesWithDetails) {
     .map((place) => ({
       totalRatings: place.user_ratings_total,
       name: place.name,
-      phoneNumber: place.formatted_phone_number,
-      address: place.formatted_address,
+      address: place.vicinity,
       rating: place.rating,
       tag: place.types.join(", "),
-      website: place.website,
-      googleMapsUrl: place.url,
+      url: place.url,
+      lat: place.geometry.location.lat,
+      lng: place.geometry.location.lng,
+      placeId: place.place_id,
+      status: place.business_status,
+      photo: place.photos && place.photos[0].photo_reference,
     }));
 
   const filteredPlaces = config.filters.reduce(
